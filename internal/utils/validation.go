@@ -1,6 +1,8 @@
 package utils
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+)
 
 type ValidationError struct {
 	Field   string `json:"field"`
