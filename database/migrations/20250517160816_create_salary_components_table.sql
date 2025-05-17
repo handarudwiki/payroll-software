@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TYPE salary_component_type AS ENUM ('allowance', 'recurring');
+CREATE TYPE salary_component_type AS ENUM ('allowance', 'deduction');
 
 CREATE TABLE salary_components (
     id SERIAL PRIMARY KEY,
