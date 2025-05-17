@@ -21,6 +21,7 @@ func main() {
 	app := gin.New()
 
 	routes.InitUser(db, cfg.JWT, app)
+	routes.InitDepartment(db, cfg.JWT, app)
 
 	app.Run(fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port))
 }

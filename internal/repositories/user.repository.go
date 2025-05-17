@@ -1,15 +1,17 @@
 package repositories
 
 import (
+	"context"
+
 	"github.com/handarudwiki/payroll-sistem/internal/models"
 	"gorm.io/gorm"
 )
 
 type (
 	User interface {
-		FindByID(id int) (models.User, error)
-		FindByUsername(username string) (models.User, error)
-		Create(user models.User) (models.User, error)
+		FindByID(ctx context.Context, id int) (models.User, error)
+		FindByUsername(ctx context.Context, username string) (models.User, error)
+		Create(ctx context.Context, user models.User) (models.User, error)
 	}
 
 	userRepository struct {
@@ -22,7 +24,7 @@ func NewUserRepository(db *gorm.DB) User {
 		db: db,
 	}
 }
-func (r *userRepository) FindByID(id int) (models.User, error) {
+func (r *userRepository) FindByID(ctx context.Context, id int) (models.User, error) {
 	var user models.User
 	err := r.db.Where("id = ?", id).First(&user).Error
 	if err != nil {
@@ -31,7 +33,7 @@ func (r *userRepository) FindByID(id int) (models.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) FindByUsername(username string) (models.User, error) {
+func (r *userRepository) FindByUsername(ctx context.Context, username string) (models.User, error) {
 	var user models.User
 	err := r.db.Where("username = ?", username).First(&user).Error
 	if err != nil {
@@ -40,7 +42,7 @@ func (r *userRepository) FindByUsername(username string) (models.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) Create(user models.User) (models.User, error) {
+func (r *userRepository) Create(ctx context.Context, user models.User) (models.User, error) {
 	err := r.db.Create(&user).Error
 	if err != nil {
 		return models.User{}, err

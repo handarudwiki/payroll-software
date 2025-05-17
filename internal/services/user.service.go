@@ -1,7 +1,9 @@
 package services
 
 import (
+	"context"
 	"errors"
+	"fmt"
 
 	"github.com/handarudwiki/payroll-sistem/config"
 	"github.com/handarudwiki/payroll-sistem/internal/dto"
@@ -15,8 +17,8 @@ import (
 
 type (
 	User interface {
-		Login(dto dto.Login) (responses.LoginResponse, error)
-		Register(dto dto.Register) (models.UserResponse, error)
+		Login(ctx context.Context, dto dto.Login) (responses.LoginResponse, error)
+		Register(ctx context.Context, dto dto.Register) (models.UserResponse, error)
 	}
 
 	userService struct {
@@ -31,8 +33,8 @@ func NewUserService(userRepository repositories.User, jwt config.JWT) User {
 		jwt:            jwt,
 	}
 }
-func (s *userService) Login(dto dto.Login) (res responses.LoginResponse, err error) {
-	user, err := s.userRepository.FindByUsername(dto.Username)
+func (s *userService) Login(ctx context.Context, dto dto.Login) (res responses.LoginResponse, err error) {
+	user, err := s.userRepository.FindByUsername(ctx, dto.Username)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return responses.LoginResponse{}, commons.ErrCredentials
@@ -51,6 +53,8 @@ func (s *userService) Login(dto dto.Login) (res responses.LoginResponse, err err
 		return responses.LoginResponse{}, commons.ErrCredentials
 	}
 
+	fmt.Println("role generate token ", user.Role)
+
 	token, err := utils.GenerateToken(user.ID, user.Role, s.jwt.Secret)
 	if err != nil {
 		return responses.LoginResponse{}, err
@@ -61,8 +65,8 @@ func (s *userService) Login(dto dto.Login) (res responses.LoginResponse, err err
 	}, nil
 }
 
-func (s *userService) Register(dto dto.Register) (res models.UserResponse, err error) {
-	user, err := s.userRepository.FindByUsername(dto.Username)
+func (s *userService) Register(ctx context.Context, dto dto.Register) (res models.UserResponse, err error) {
+	user, err := s.userRepository.FindByUsername(ctx, dto.Username)
 	if err == nil {
 		return models.UserResponse{}, err
 	}
@@ -83,7 +87,7 @@ func (s *userService) Register(dto dto.Register) (res models.UserResponse, err e
 		return models.UserResponse{}, err
 	}
 
-	user, err = s.userRepository.Create(newUser)
+	user, err = s.userRepository.Create(ctx, newUser)
 	if err != nil {
 		return models.UserResponse{}, err
 	}

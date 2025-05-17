@@ -39,7 +39,7 @@ func (c *userController) Login(ctx *gin.Context) {
 		return
 	}
 
-	loginResponse, err := c.userService.Login(loginRequest)
+	loginResponse, err := c.userService.Login(ctx, loginRequest)
 	if err != nil {
 		code := utils.GetHttpStatusCode(err)
 		utils.ResponseError(ctx, err.Error(), code)
@@ -63,7 +63,7 @@ func (c *userController) Register(ctx *gin.Context) {
 		return
 	}
 
-	userResponse, err := c.userService.Register(registerRequest)
+	userResponse, err := c.userService.Register(ctx, registerRequest)
 	if err != nil {
 		code := utils.GetHttpStatusCode(err)
 		utils.ResponseError(ctx, err.Error(), code)
