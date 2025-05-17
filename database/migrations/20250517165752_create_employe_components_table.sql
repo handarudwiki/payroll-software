@@ -6,7 +6,7 @@ CREATE TABLE employee_components (
     salary_component_id INT REFERENCES salary_components(id),
     amount DECIMAL(10, 2) NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
-    custom_override BOOLEAN DEFAULT FALSE,
+    custom_override VARCHAR(255) DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
