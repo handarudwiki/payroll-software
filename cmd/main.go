@@ -27,6 +27,7 @@ func main() {
 	routes.InitSalaryComponent(db, cfg.JWT, app)
 	routes.InitEmployeeComponent(db, cfg.JWT, app)
 	routes.InitAttendance(db, cfg.JWT, app)
+	routes.InitLeave(db, cfg.JWT, app)
 
 	app.Run(fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port))
 }
