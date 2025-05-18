@@ -28,6 +28,7 @@ func main() {
 	routes.InitEmployeeComponent(db, cfg.JWT, app)
 	routes.InitAttendance(db, cfg.JWT, app)
 	routes.InitLeave(db, cfg.JWT, app)
+	routes.InitLoan(db, cfg.JWT, app)
 
 	app.Run(fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port))
 }
