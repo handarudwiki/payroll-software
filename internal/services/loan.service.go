@@ -66,7 +66,7 @@ func (s *loan) FindAll(ctx context.Context, base dto.BaseQuery) (res []responses
 
 	meta = commons.NewPagination(base.Page, base.Limit, int(totalData))
 
-	res = responses.NewLoansResponse(loans)
+	res = responses.NewLoanResponses(loans)
 	return res, meta, nil
 }
 

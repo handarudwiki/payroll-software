@@ -29,3 +29,11 @@ func NewLoanResponse(loan models.Loan) Loan {
 		Employee:           NewEmployeeResponse(loan.Employee),
 	}
 }
+
+func NewLoanResponses(loans []models.Loan) []Loan {
+	responses := make([]Loan, len(loans))
+	for i, loan := range loans {
+		responses[i] = NewLoanResponse(loan)
+	}
+	return responses
+}
