@@ -17,6 +17,7 @@ type (
 		Delete(ctx context.Context, id int) error
 		FindAll(ctx context.Context, base dto.BaseQuery) (positions []models.Position, totalData int64, err error)
 		BulkCreate(ctx context.Context, positions []models.Position) ([]models.Position, error)
+		FindAllOnly(ctx context.Context) (positions []models.Position, err error)
 	}
 
 	position struct {
@@ -79,6 +80,14 @@ func (r *position) FindAll(ctx context.Context, base dto.BaseQuery) (positions [
 
 func (r *position) BulkCreate(ctx context.Context, positions []models.Position) ([]models.Position, error) {
 	err := r.db.Create(&positions).Error
+	if err != nil {
+		return nil, err
+	}
+	return positions, nil
+}
+
+func (r *position) FindAllOnly(ctx context.Context) (positions []models.Position, err error) {
+	err = r.db.Select("id", "name").Find(&positions).Error
 	if err != nil {
 		return nil, err
 	}

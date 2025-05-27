@@ -21,6 +21,7 @@ type (
 		FindAll(ctx context.Context, base dto.BaseQuery) (employees []models.Employee, totalData int64, err error)
 		FindAllActive(ctx context.Context) (employees []models.Employee, err error)
 		FindByIDSActive(ctx context.Context, ids []int) ([]models.Employee, error)
+		BulkCreate(ctx context.Context, employees []models.Employee) ([]models.Employee, error)
 	}
 
 	employee struct {
@@ -127,6 +128,14 @@ func (r *employee) FindByIDSActive(ctx context.Context, ids []int) ([]models.Emp
 		Preload("Department").Preload("Position").
 		Preload("Leave").Preload("Loan").Preload("Attendance").
 		Find(&employees).Error
+	if err != nil {
+		return nil, err
+	}
+	return employees, nil
+}
+
+func (r *employee) BulkCreate(ctx context.Context, employees []models.Employee) ([]models.Employee, error) {
+	err := r.db.Create(&employees).Error
 	if err != nil {
 		return nil, err
 	}

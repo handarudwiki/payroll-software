@@ -15,6 +15,7 @@ type (
 		Update(ctx context.Context, user models.User, id int) (models.User, error)
 		UpdatePassword(ctx context.Context, id int, password string) (models.User, error)
 		BulkCreate(ctx context.Context, users []models.User) ([]models.User, error)
+		FindAllOnly(ctx context.Context) ([]models.User, error)
 	}
 
 	userRepository struct {
@@ -75,6 +76,15 @@ func (r *userRepository) BulkCreate(ctx context.Context, users []models.User) ([
 	}
 
 	err := r.db.Create(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func (r *userRepository) FindAllOnly(ctx context.Context) ([]models.User, error) {
+	var users []models.User
+	err := r.db.Select("id", "username", "name").Find(&users).Error
 	if err != nil {
 		return nil, err
 	}

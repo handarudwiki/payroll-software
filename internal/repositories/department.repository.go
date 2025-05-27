@@ -17,6 +17,7 @@ type (
 		Delete(ctx context.Context, id int) error
 		FindAll(ctx context.Context, base dto.BaseQuery) (departments []models.Department, totalData int64, err error)
 		BulkCreate(ctx context.Context, departments []models.Department) ([]models.Department, error)
+		FindAllOnly(ctx context.Context) (departments []models.Department, err error)
 	}
 	DepartmentRepository struct {
 		db *gorm.DB
@@ -81,6 +82,14 @@ func (r *DepartmentRepository) FindAll(ctx context.Context, base dto.BaseQuery) 
 
 func (r *DepartmentRepository) BulkCreate(ctx context.Context, departments []models.Department) ([]models.Department, error) {
 	err := r.db.Create(&departments).Error
+	if err != nil {
+		return nil, err
+	}
+	return departments, nil
+}
+
+func (r *DepartmentRepository) FindAllOnly(ctx context.Context) (departments []models.Department, err error) {
+	err = r.db.Select("id", "name").Find(&departments).Error
 	if err != nil {
 		return nil, err
 	}
