@@ -21,15 +21,19 @@ type (
 		repo         repositories.Payroll
 		payslipRepo  repositories.PayslipDetail
 		employeeRepo repositories.Employee
+		leaveRepo    repositories.Leave
+		loanRepo     repositories.Loan
 		db           *gorm.DB
 	}
 )
 
-func NewPayrollService(repo repositories.Payroll, payslipRepo repositories.PayslipDetail, employeeRepo repositories.Employee, db *gorm.DB) Payroll {
+func NewPayrollService(repo repositories.Payroll, payslipRepo repositories.PayslipDetail, employeeRepo repositories.Employee, leaveRepo repositories.Leave, loanRepo repositories.Loan, db *gorm.DB) Payroll {
 	return &payroll{
 		repo:         repo,
 		payslipRepo:  payslipRepo,
 		employeeRepo: employeeRepo,
+		loanRepo:     loanRepo,
+		leaveRepo:    leaveRepo,
 		db:           db,
 	}
 }
@@ -38,7 +42,8 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 	tx := s.db.Begin()
 
 	if tx.Error != nil {
-		return tx.Error
+		err = tx.Error
+		return
 	}
 	defer func() {
 		if r := recover(); r != nil {
@@ -91,17 +96,19 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 		}
 
 		//handle loan
-		if len(employee.Loans) > 0 {
-			for _, loan := range employee.Loans {
+		for _, loan := range employee.Loans {
 
-				if loan.Status == "active" && loan.StartDate.Before(periodDate) {
-					totalDeduction += loan.MonthlyInstallment
-					loan.RemainingAmount -= loan.MonthlyInstallment
+			if loan.Status == "active" && loan.StartDate.Before(periodDate) {
+				totalDeduction += loan.MonthlyInstallment
+				loan.RemainingAmount -= loan.MonthlyInstallment
 
-					if loan.RemainingAmount <= 0 {
-						loan.Status = "paid"
-					}
+				if loan.RemainingAmount <= 0 {
+					loan.Status = "paid"
 				}
+			}
+			_, err = s.loanRepo.Update(ctx, loan.ID, loan)
+			if err != nil {
+				return err
 			}
 		}
 
@@ -128,6 +135,18 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 		totalDeduction += absentPenalty + latePenalty
 		totalSalary := baseSalary + totalAllowance - totalDeduction
 
+		leaves, err := s.leaveRepo.FindByEmployeeIDMaternity(ctx, employee.ID)
+
+		if err != nil {
+			return err
+		}
+
+		if len(leaves) > 0 {
+			totalSalary = 0
+			totalAllowance = 0
+			totalDeduction = 0
+		}
+
 		payroll := models.Payroll{
 			EmployeeID:      employee.ID,
 			Period:          periodDate,
@@ -137,25 +156,30 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 			Generated:       time.Now(),
 		}
 
-		payroll, err := s.repo.Create(ctx, tx, payroll)
+		payroll, err = s.repo.Create(ctx, tx, payroll)
 		if err != nil {
 			return err
 		}
 
 		var payslipDetails []models.PayslipDetail
 
-		for _, comp := range employee.EmployeeComponent {
-			payslipDetail := models.PayslipDetail{
-				PayrollID:     payroll.ID,
-				ComponentID:   comp.SalaryComponentID,
-				Amount:        comp.Amount,
-				ComponentType: comp.SalaryComponent.Type,
+		if len(leaves) == 0 {
+			for _, comp := range employee.EmployeeComponent {
+				payslipDetail := models.PayslipDetail{
+					PayrollID:     payroll.ID,
+					ComponentID:   comp.SalaryComponentID,
+					Amount:        comp.Amount,
+					ComponentType: comp.SalaryComponent.Type,
+				}
+
+				payslipDetails = append(payslipDetails, payslipDetail)
 			}
 
-			payslipDetails = append(payslipDetails, payslipDetail)
+			_, err = s.payslipRepo.BulkCreate(ctx, tx, payslipDetails)
+			if err != nil {
+				return err
+			}
 		}
-
-		s.payslipRepo.BulkCreate(ctx, tx, payslipDetails)
 	}
 
 	return

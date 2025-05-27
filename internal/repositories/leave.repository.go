@@ -17,6 +17,7 @@ type (
 		Delete(ctx context.Context, id int) error
 		FindAll(ctx context.Context, base dto.BaseQuery) (leaves []models.Leave, totalData int64, err error)
 		FindByEmployeeIDS(ctx context.Context, employeeIDS []int) ([]models.Leave, error)
+		FindByEmployeeIDMaternity(ctx context.Context, employeeID int) ([]models.Leave, error)
 	}
 
 	leave struct {
@@ -83,6 +84,19 @@ func (r *leave) FindByEmployeeIDS(ctx context.Context, employeeIDS []int) ([]mod
 	var leaves []models.Leave
 	err := r.db.Where("employee_id IN ?", employeeIDS).
 		Where("status = ?", models.LeaveStatusApproved).
+		Where("end_date >= CURDATE()").
+		Find(&leaves).Error
+	if err != nil {
+		return nil, err
+	}
+	return leaves, nil
+}
+
+func (r *leave) FindByEmployeeIDMaternity(ctx context.Context, employeeID int) ([]models.Leave, error) {
+	var leaves []models.Leave
+	err := r.db.Where("employee_id = ?", employeeID).
+		Where("status = ?", models.LeaveStatusApproved).
+		Where("type = ?", models.LeaveTypeMaternity).
 		Where("end_date >= CURDATE()").
 		Find(&leaves).Error
 	if err != nil {

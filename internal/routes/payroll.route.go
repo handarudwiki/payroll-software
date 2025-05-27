@@ -14,8 +14,10 @@ func InitPayroll(db *gorm.DB, jwt config.JWT, router *gin.Engine) {
 	payrollRepos := repositories.NewPayrollRepository(db)
 	payslipDetailRepos := repositories.NewPayslipDetailRepository(db)
 	emailRepos := repositories.NewEmployeeRepository(db)
+	leaveRepo := repositories.NewLeaveRepository(db)
+	loanRepo := repositories.NewLoanRepository(db)
 
-	payrollService := services.NewPayrollService(payrollRepos, payslipDetailRepos, emailRepos, db)
+	payrollService := services.NewPayrollService(payrollRepos, payslipDetailRepos, emailRepos, leaveRepo, loanRepo, db)
 	payrollController := controllers.NewPayrollController(payrollService)
 
 	// Payroll routes
