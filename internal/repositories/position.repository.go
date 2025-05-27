@@ -16,6 +16,7 @@ type (
 		Update(ctx context.Context, id int, position models.Position) (models.Position, error)
 		Delete(ctx context.Context, id int) error
 		FindAll(ctx context.Context, base dto.BaseQuery) (positions []models.Position, totalData int64, err error)
+		BulkCreate(ctx context.Context, positions []models.Position) ([]models.Position, error)
 	}
 
 	position struct {
@@ -74,4 +75,12 @@ func (r *position) FindAll(ctx context.Context, base dto.BaseQuery) (positions [
 	}
 	return positions, totalData, nil
 
+}
+
+func (r *position) BulkCreate(ctx context.Context, positions []models.Position) ([]models.Position, error) {
+	err := r.db.Create(&positions).Error
+	if err != nil {
+		return nil, err
+	}
+	return positions, nil
 }
