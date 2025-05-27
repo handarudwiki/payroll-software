@@ -16,6 +16,7 @@ type (
 		Create(ctx context.Context, loan models.Loan) (models.Loan, error)
 		Update(ctx context.Context, id int, loan models.Loan) (models.Loan, error)
 		Delete(ctx context.Context, id int) error
+		BulkCreate(ctx context.Context, loans []models.Loan) ([]models.Loan, error)
 	}
 
 	loan struct {
@@ -73,4 +74,12 @@ func (r *loan) Delete(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (r *loan) BulkCreate(ctx context.Context, loans []models.Loan) ([]models.Loan, error) {
+	err := r.db.Create(&loans).Error
+	if err != nil {
+		return nil, err
+	}
+	return loans, nil
 }
