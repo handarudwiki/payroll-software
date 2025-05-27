@@ -16,6 +16,8 @@ type (
 		Update(ctx context.Context, id int, employeeComponent models.EmployeeComponent) (models.EmployeeComponent, error)
 		Delete(ctx context.Context, id int) error
 		FindAll(ctx context.Context, base dto.BaseQuery) (employeeComponents []models.EmployeeComponent, totalData int64, err error)
+		BulkCreate(ctx context.Context, employeeComponents []models.EmployeeComponent) ([]models.EmployeeComponent, error)
+		FindAllOnly(ctx context.Context) (employeeComponents []models.EmployeeComponent, err error)
 	}
 
 	employeeComponent struct {
@@ -77,4 +79,19 @@ func (r *employeeComponent) FindAll(ctx context.Context, base dto.BaseQuery) (em
 	}
 
 	return employeeComponents, totalData, nil
+}
+
+func (r *employeeComponent) BulkCreate(ctx context.Context, employeeComponents []models.EmployeeComponent) ([]models.EmployeeComponent, error) {
+	err := r.db.Create(&employeeComponents).Error
+	if err != nil {
+		return nil, err
+	}
+	return employeeComponents, nil
+}
+func (r *employeeComponent) FindAllOnly(ctx context.Context) (employeeComponents []models.EmployeeComponent, err error) {
+	err = r.db.Find(&employeeComponents).Error
+	if err != nil {
+		return nil, err
+	}
+	return employeeComponents, nil
 }
