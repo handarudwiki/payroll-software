@@ -85,7 +85,7 @@ func (s *loan) FindByID(ctx context.Context, id int) (res responses.Loan, err er
 	return res, nil
 }
 func (s *loan) Update(ctx context.Context, id int, dto dto.UpdateLoan) (res responses.Loan, err error) {
-	loan, err := s.repo.FindByID(ctx, id)
+	_, err = s.repo.FindByID(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return res, commons.ErrNotfound
 	}
@@ -94,7 +94,7 @@ func (s *loan) Update(ctx context.Context, id int, dto dto.UpdateLoan) (res resp
 		return res, err
 	}
 
-	loan, err = models.NewLoanFromUpdateLoan(dto)
+	loan, err := models.NewLoanFromUpdateLoan(dto)
 
 	if err != nil {
 		return res, err

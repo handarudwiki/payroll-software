@@ -73,7 +73,7 @@ func (s *salaryComponent) FindByID(ctx context.Context, id int) (res responses.S
 
 func (s *salaryComponent) Update(ctx context.Context, id int, dto dto.UpdateSalaryComponent) (res responses.SalaryComponentResponse, err error) {
 
-	salaryComponent, err := s.repo.FindByID(ctx, id)
+	_, err = s.repo.FindByID(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return res, commons.ErrNotfound
 	}
@@ -82,7 +82,7 @@ func (s *salaryComponent) Update(ctx context.Context, id int, dto dto.UpdateSala
 		return res, err
 	}
 
-	salaryComponent = models.NewSalaryComponentFromUpdateSalaryComponent(dto)
+	salaryComponent := models.NewSalaryComponentFromUpdateSalaryComponent(dto)
 
 	salaryComponent, err = s.repo.Update(ctx, id, salaryComponent)
 	if err != nil {

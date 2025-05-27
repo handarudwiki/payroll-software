@@ -107,6 +107,11 @@ func (s *employee) Create(ctx context.Context, dto dto.CreateEmployee) (res resp
 		return res, err
 	}
 	phone, err := s.repo.FindByPhone(ctx, dto.Phone)
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return res, err
+	}
+
 	if phone.ID != 0 {
 		return res, commons.ErrConflict
 	}
@@ -136,7 +141,7 @@ func (s *employee) Create(ctx context.Context, dto dto.CreateEmployee) (res resp
 	return res, nil
 }
 func (s *employee) Update(ctx context.Context, id int, dto dto.UpdateEmployee) (res responses.Employee, err error) {
-	employee, err := s.repo.FindByID(ctx, id)
+	_, err = s.repo.FindByID(ctx, id)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return res, commons.ErrNotfound
@@ -145,7 +150,7 @@ func (s *employee) Update(ctx context.Context, id int, dto dto.UpdateEmployee) (
 	if err != nil {
 		return res, err
 	}
-	employee = models.NewEmployeeFromUpdateEmployee(dto)
+	employee := models.NewEmployeeFromUpdateEmployee(dto)
 	_, err = s.departmentRepo.FindByID(ctx, dto.DepartmentID)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {

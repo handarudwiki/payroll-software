@@ -55,7 +55,7 @@ func (s *position) FindByID(ctx context.Context, id int) (res responses.Position
 }
 
 func (s *position) Update(ctx context.Context, id int, dto dto.UpdatePosition) (res responses.Position, err error) {
-	position, err := s.repo.FindByID(ctx, id)
+	_, err = s.repo.FindByID(ctx, id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return res, commons.ErrNotfound
 	}
@@ -64,7 +64,7 @@ func (s *position) Update(ctx context.Context, id int, dto dto.UpdatePosition) (
 		return res, err
 	}
 
-	position = models.NewPositionFromUpdatePosition(dto)
+	position := models.NewPositionFromUpdatePosition(dto)
 
 	position, err = s.repo.Update(ctx, id, position)
 	if err != nil {

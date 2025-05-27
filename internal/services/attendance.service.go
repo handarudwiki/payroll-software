@@ -72,11 +72,11 @@ func (s *attendance) Create(ctx context.Context, dto dto.CreateAttendance) (res 
 }
 
 func (s *attendance) Update(ctx context.Context, id int, dto dto.UpdateAttendance) (res responses.Attendance, err error) {
-	attendance, err := s.repo.FindByID(ctx, id)
+	_, err = s.repo.FindByID(ctx, id)
 	if err != nil {
 		return res, err
 	}
-	attendance, err = models.NewAttendanceFromUpdateAttendance(dto)
+	attendance, err := models.NewAttendanceFromUpdateAttendance(dto)
 	if err != nil {
 		return res, err
 	}
