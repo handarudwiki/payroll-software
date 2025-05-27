@@ -7,6 +7,7 @@ import (
 	"github.com/handarudwiki/payroll-sistem/config"
 	"github.com/handarudwiki/payroll-sistem/database/connections"
 	"github.com/handarudwiki/payroll-sistem/internal/routes"
+	"github.com/handarudwiki/payroll-sistem/internal/schedulers"
 )
 
 func main() {
@@ -29,6 +30,9 @@ func main() {
 	routes.InitAttendance(db, cfg.JWT, app)
 	routes.InitLeave(db, cfg.JWT, app)
 	routes.InitLoan(db, cfg.JWT, app)
+	routes.InitPayroll(db, cfg.JWT, app)
+
+	schedulers.InitSchedulerAttendance(db)
 
 	app.Run(fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port))
 }

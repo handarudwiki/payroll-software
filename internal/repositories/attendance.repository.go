@@ -16,6 +16,8 @@ type (
 		Create(ctx context.Context, attendance models.Attendance) (models.Attendance, error)
 		Update(ctx context.Context, id int, attendance models.Attendance) (models.Attendance, error)
 		Delete(ctx context.Context, id int) error
+		TodayAttendance(ctx context.Context) ([]models.Attendance, error)
+		BulkCreate(ctx context.Context, attendances []models.Attendance) ([]models.Attendance, error)
 	}
 
 	attendance struct {
@@ -76,4 +78,21 @@ func (r *attendance) Delete(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (r *attendance) TodayAttendance(ctx context.Context) ([]models.Attendance, error) {
+	var attendances []models.Attendance
+	err := r.db.Where("date = CURDATE()").Find(&attendances).Error
+	if err != nil {
+		return nil, err
+	}
+	return attendances, nil
+}
+
+func (r *attendance) BulkCreate(ctx context.Context, attendances []models.Attendance) ([]models.Attendance, error) {
+	err := r.db.Create(&attendances).Error
+	if err != nil {
+		return nil, err
+	}
+	return attendances, nil
 }

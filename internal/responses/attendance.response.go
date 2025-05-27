@@ -1,14 +1,18 @@
 package responses
 
-import "github.com/handarudwiki/payroll-sistem/internal/models"
+import (
+	"time"
+
+	"github.com/handarudwiki/payroll-sistem/internal/models"
+)
 
 type Attendance struct {
-	ID           int      `json:"id"`
-	EmployeeID   int      `json:"employee_id"`
-	Employee     Employee `json:"employee"`
-	Date         string   `json:"date"`
-	Status       string   `json:"status"`
-	WorkingHours int      `json:"working_hours"`
+	ID           int       `json:"id"`
+	EmployeeID   int       `json:"employee_id"`
+	Employee     Employee  `json:"employee"`
+	Date         time.Time `json:"date"`
+	Status       string    `json:"status"`
+	WorkingHours int       `json:"working_hours"`
 }
 
 func NewAttendanceResponse(attendance models.Attendance) Attendance {

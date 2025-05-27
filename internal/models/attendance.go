@@ -9,37 +9,56 @@ import (
 type AttendaceStatus string
 
 const (
-	Present AttendaceStatus = "present"
-	Absent  AttendaceStatus = "absent"
-	Sick    AttendaceStatus = "sick"
-	OnLeave AttendaceStatus = "on_leave"
-	Late    AttendaceStatus = "late"
+	Present       AttendaceStatus = "present"
+	Absent        AttendaceStatus = "absent"
+	Sick          AttendaceStatus = "sick"
+	OnLeave       AttendaceStatus = "on_leave"
+	Late          AttendaceStatus = "late"
+	AbsentPenalty                 = 50000
+	LatePenalty                   = 20000
 )
 
 type Attendance struct {
 	ID           int             `json:"id"`
 	EmployeeID   int             `json:"employee_id"`
 	Employee     Employee        `json:"employee"`
-	Date         string          `json:"date"`
+	Date         time.Time       `json:"date"`
 	Status       AttendaceStatus `json:"status"`
 	WorkingHours int             `json:"working_hours"`
 	CreatedAt    time.Time       `json:"created_at"`
 	UpdatedAt    time.Time       `json:"updated_at"`
 }
 
-func NewAttendanceFromCreateAttendance(data dto.CreateAttendance) Attendance {
+func NewAttendanceFromCreateAttendance(data dto.CreateAttendance) (Attendance, error) {
+	date, err := time.Parse("2006-01-02", data.Date)
+	if err != nil {
+		date = time.Now() // Fallback to current time if parsing fails
+	}
+
+	if err != nil {
+		return Attendance{}, err
+	}
+
 	return Attendance{
 		EmployeeID:   data.EmployeeID,
-		Date:         data.Date,
+		Date:         date,
 		Status:       AttendaceStatus(data.Status),
 		WorkingHours: data.WorkingHours,
-	}
+	}, nil
 }
-func NewAttendanceFromUpdateAttendance(data dto.UpdateAttendance) Attendance {
+
+func NewAttendanceFromUpdateAttendance(data dto.UpdateAttendance) (Attendance, error) {
+	date, err := time.Parse("2006-01-02", data.Date)
+	if err != nil {
+		date = time.Now() // Fallback to current time if parsing fails
+	}
+	if err != nil {
+		return Attendance{}, err
+	}
 	return Attendance{
 		EmployeeID:   data.EmployeeID,
-		Date:         data.Date,
+		Date:         date,
 		Status:       AttendaceStatus(data.Status),
 		WorkingHours: data.WorkingHours,
-	}
+	}, nil
 }

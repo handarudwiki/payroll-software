@@ -3,11 +3,11 @@ module github.com/handarudwiki/payroll-sistem
 go 1.23.2
 
 require (
-	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/joho/godotenv v1.5.1
+	github.com/robfig/cron v1.2.0
 	golang.org/x/crypto v0.38.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.26.1

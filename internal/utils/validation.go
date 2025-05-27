@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"time"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -9,10 +11,16 @@ type ValidationError struct {
 	Message string `json:"message"`
 }
 
+func isDate(fl validator.FieldLevel) bool {
+	_, err := time.Parse("2006-01-02", fl.Field().String())
+	return err == nil
+}
+
 var validate = validator.New()
 
 func ValidateRequest(data interface{}) []ValidationError {
 	var errors []ValidationError
+	validate.RegisterValidation("date", isDate)
 
 	err := validate.Struct(data)
 	if err != nil {
@@ -40,6 +48,8 @@ func GetErrorMessage(e validator.FieldError) (message string) {
 		message = "Field " + e.Field() + " must be at least " + e.Param() + " characters long"
 	case "max":
 		message = "Field " + e.Field() + " must be at most " + e.Param() + " characters long"
+	case "date":
+		message = "Field " + e.Field() + " must be a valid date in the format YYYY-MM-DD"
 	default:
 		message = "Field " + e.Field() + " is not valid"
 	}

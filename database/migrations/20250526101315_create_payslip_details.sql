@@ -3,7 +3,7 @@
 CREATE TABLE payslip_details(
     id SERIAL PRIMARY KEY,
     payroll_id INT REFERENCES payrolls(id),
-    component_id INT NOT NULL,
+    salary_component_id INT REFERENCES salary_components(id),
     component_type salary_component_type NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

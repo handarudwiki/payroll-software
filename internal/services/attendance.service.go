@@ -55,7 +55,11 @@ func (s *attendance) Create(ctx context.Context, dto dto.CreateAttendance) (res 
 		return res, err
 	}
 
-	attendance := models.NewAttendanceFromCreateAttendance(dto)
+	attendance, err := models.NewAttendanceFromCreateAttendance(dto)
+
+	if err != nil {
+		return res, err
+	}
 
 	attendance, err = s.repo.Create(ctx, attendance)
 	if err != nil {
@@ -72,7 +76,10 @@ func (s *attendance) Update(ctx context.Context, id int, dto dto.UpdateAttendanc
 	if err != nil {
 		return res, err
 	}
-	attendance = models.NewAttendanceFromUpdateAttendance(dto)
+	attendance, err = models.NewAttendanceFromUpdateAttendance(dto)
+	if err != nil {
+		return res, err
+	}
 	attendance, err = s.repo.Update(ctx, id, attendance)
 	if err != nil {
 		return res, err

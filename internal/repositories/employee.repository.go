@@ -19,6 +19,8 @@ type (
 		Update(ctx context.Context, id int, employee models.Employee) (models.Employee, error)
 		Delete(ctx context.Context, id int) error
 		FindAll(ctx context.Context, base dto.BaseQuery) (employees []models.Employee, totalData int64, err error)
+		FindAllActive(ctx context.Context) (employees []models.Employee, err error)
+		FindByIDSActive(ctx context.Context, ids []int) ([]models.Employee, error)
 	}
 
 	employee struct {
@@ -103,4 +105,30 @@ func (r *employee) FindAll(ctx context.Context, base dto.BaseQuery) (employees [
 		return employees, 0, err
 	}
 	return employees, totalData, nil
+}
+
+func (r *employee) FindAllActive(ctx context.Context) (employees []models.Employee, err error) {
+	err = r.db.Select("id", "name", "nik").
+		Where("status", "active").
+		Preload("Department").Preload("Position").
+		Preload("Leave").
+		Preload("Loan").Preload("Attendance").
+		Find(&employees).Error
+	if err != nil {
+		return nil, err
+	}
+	return employees, nil
+}
+
+func (r *employee) FindByIDSActive(ctx context.Context, ids []int) ([]models.Employee, error) {
+	var employees []models.Employee
+	err := r.db.Select("id", "name", "nik").
+		Where("status = ? AND id IN ?", "active", ids).
+		Preload("Department").Preload("Position").
+		Preload("Leave").Preload("Loan").Preload("Attendance").
+		Find(&employees).Error
+	if err != nil {
+		return nil, err
+	}
+	return employees, nil
 }

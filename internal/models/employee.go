@@ -15,20 +15,24 @@ const (
 )
 
 type Employee struct {
-	ID           int            `json:"id"`
-	Name         string         `json:"name"`
-	Email        string         `json:"email"`
-	Phone        string         `json:"phone"`
-	NIK          string         `json:"nik"`
-	PositionID   int            `json:"position_id"`
-	DepartmentID int            `json:"department_id"`
-	HireDate     string         `json:"hire_date"`
-	UserID       int            `json:"user_id"`
-	Status       StatusEmployee `json:"status"`
-	Department   Department     `json:"department"`
-	Position     Position       `json:"position"`
-	CreatedAt    time.Time      `json:"created_at"`
-	UpdatedAt    time.Time      `json:"updated_at"`
+	ID                int                 `json:"id"`
+	Name              string              `json:"name"`
+	Email             string              `json:"email"`
+	Phone             string              `json:"phone"`
+	NIK               string              `json:"nik"`
+	PositionID        int                 `json:"position_id"`
+	DepartmentID      int                 `json:"department_id"`
+	HireDate          string              `json:"hire_date"`
+	UserID            int                 `json:"user_id"`
+	Status            StatusEmployee      `json:"status"`
+	Loans             []Loan              `json:"loans,omitempty"`
+	Attendances       []Attendance        `json:"attendances,omitempty"`
+	EmployeeComponent []EmployeeComponent `json:"employee_components,omitempty"`
+	Leaves            []Leave             `json:"leaves,omitempty"`
+	Department        Department          `json:"department"`
+	Position          Position            `json:"position"`
+	CreatedAt         time.Time           `json:"created_at"`
+	UpdatedAt         time.Time           `json:"updated_at"`
 }
 
 func NewEmployeeFromCreateEmployee(data dto.CreateEmployee) Employee {
