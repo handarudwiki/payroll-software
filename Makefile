@@ -23,3 +23,6 @@ new:
 run:
 	@go run ./cmd/main.go
 
+seed:
+	@go run ./cmd/seed/seed.go
+

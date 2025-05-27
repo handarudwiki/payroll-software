@@ -22,6 +22,66 @@ func UserSeed(repo repositories.User) (err error) {
 			Password: string(password),
 			Role:     models.RoleAdmin,
 		},
+		{
+			Name:     "John Doe",
+			Username: "johndoe",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Jane Smith",
+			Username: "janesmith",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Michael Johnson",
+			Username: "mjohnson",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Emily Davis",
+			Username: "edavis",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "David Lee",
+			Username: "dlee",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Sarah Kim",
+			Username: "skim",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "James Brown",
+			Username: "jbrown",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Linda White",
+			Username: "lwhite",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Robert Harris",
+			Username: "rharris",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
+		{
+			Name:     "Karen Martinez",
+			Username: "kmartinez",
+			Password: string(password),
+			Role:     models.RoleUser,
+		},
 	}
 
 	_, err = repo.BulkCreate(context.Background(), users)

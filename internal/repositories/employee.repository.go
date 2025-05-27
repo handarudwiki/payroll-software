@@ -112,8 +112,9 @@ func (r *employee) FindAllActive(ctx context.Context) (employees []models.Employ
 	err = r.db.Select("id", "name", "nik").
 		Where("status", "active").
 		Preload("Department").Preload("Position").
-		Preload("Leave").
-		Preload("Loan").Preload("Attendance").
+		Preload("Leaves").
+		Preload("EmployeeComponent.SalaryComponent").
+		Preload("Loans").Preload("Attendances").
 		Find(&employees).Error
 	if err != nil {
 		return nil, err
@@ -126,7 +127,8 @@ func (r *employee) FindByIDSActive(ctx context.Context, ids []int) ([]models.Emp
 	err := r.db.Select("id", "name", "nik").
 		Where("status = ? AND id IN ?", "active", ids).
 		Preload("Department").Preload("Position").
-		Preload("Leave").Preload("Loan").Preload("Attendance").
+		Preload("EmployeeComponent.SalaryComponent").
+		Preload("Leaves").Preload("Loans").Preload("Attendances").
 		Find(&employees).Error
 	if err != nil {
 		return nil, err
