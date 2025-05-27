@@ -18,6 +18,7 @@ type (
 		FindAll(ctx context.Context, base dto.BaseQuery) (leaves []models.Leave, totalData int64, err error)
 		FindByEmployeeIDS(ctx context.Context, employeeIDS []int) ([]models.Leave, error)
 		FindByEmployeeIDMaternity(ctx context.Context, employeeID int) ([]models.Leave, error)
+		BulkCreate(ctx context.Context, leaves []models.Leave) ([]models.Leave, error)
 	}
 
 	leave struct {
@@ -99,6 +100,14 @@ func (r *leave) FindByEmployeeIDMaternity(ctx context.Context, employeeID int) (
 		Where("type = ?", models.LeaveTypeMaternity).
 		Where("end_date >= CURDATE()").
 		Find(&leaves).Error
+	if err != nil {
+		return nil, err
+	}
+	return leaves, nil
+}
+
+func (r *leave) BulkCreate(ctx context.Context, leaves []models.Leave) ([]models.Leave, error) {
+	err := r.db.Create(&leaves).Error
 	if err != nil {
 		return nil, err
 	}
