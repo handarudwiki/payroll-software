@@ -19,7 +19,7 @@ func InitAttendance(db *gorm.DB, jwt config.JWT, router *gin.Engine) {
 	// Attendance routes
 	attendance := router.Group("/attendance")
 	{
-		attendance.POST("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), attendanceController.Create)
+		attendance.POST("/", middlewares.AuthMiddleware(jwt), attendanceController.Create)
 		attendance.GET("/", attendanceController.FindAll)
 		attendance.GET("/:id", attendanceController.FindByID)
 		attendance.PUT("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), attendanceController.Update)

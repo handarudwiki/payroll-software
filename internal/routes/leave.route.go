@@ -19,7 +19,7 @@ func InitLeave(db *gorm.DB, jwt config.JWT, router *gin.Engine) {
 	// Leave routes
 	leave := router.Group("/leave")
 	{
-		leave.POST("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), leaveController.Create)
+		leave.POST("/", middlewares.AuthMiddleware(jwt), leaveController.Create)
 		leave.GET("/", middlewares.AuthMiddleware(jwt), leaveController.FindAll)
 		leave.GET("/:id", middlewares.AuthMiddleware(jwt), leaveController.FindByID)
 		leave.PUT("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), leaveController.Update)

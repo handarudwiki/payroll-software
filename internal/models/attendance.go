@@ -30,19 +30,21 @@ type Attendance struct {
 }
 
 func NewAttendanceFromCreateAttendance(data dto.CreateAttendance) (Attendance, error) {
-	date, err := time.Parse("2006-01-02", data.Date)
-	if err != nil {
-		date = time.Now() // Fallback to current time if parsing fails
-	}
 
-	if err != nil {
-		return Attendance{}, err
+	date := time.Now()
+
+	var status AttendaceStatus
+
+	if date.Hour() > 8 {
+		status = Late
+	} else {
+		status = Present
 	}
 
 	return Attendance{
 		EmployeeID:   data.EmployeeID,
 		Date:         date,
-		Status:       AttendaceStatus(data.Status),
+		Status:       status,
 		WorkingHours: data.WorkingHours,
 	}, nil
 }

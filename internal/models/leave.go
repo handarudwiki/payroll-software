@@ -44,7 +44,7 @@ func NewLeaveFromCreateLeave(data dto.CreateLeave) (Leave, error) {
 		EmployeeID: data.EmployeeID,
 		StartDate:  starDate,
 		EndDate:    endDate,
-		Status:     LeaveStatus(data.Status),
+		Status:     LeaveStatusPending,
 		Type:       LeaveType(data.Type),
 	}, nil
 }
