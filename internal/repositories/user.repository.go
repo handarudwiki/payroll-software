@@ -12,6 +12,8 @@ type (
 		FindByID(ctx context.Context, id int) (models.User, error)
 		FindByUsername(ctx context.Context, username string) (models.User, error)
 		Create(ctx context.Context, user models.User) (models.User, error)
+		Update(ctx context.Context, user models.User, id int) (models.User, error)
+		UpdatePassword(ctx context.Context, id int, password string) (models.User, error)
 	}
 
 	userRepository struct {
@@ -44,6 +46,22 @@ func (r *userRepository) FindByUsername(ctx context.Context, username string) (m
 
 func (r *userRepository) Create(ctx context.Context, user models.User) (models.User, error) {
 	err := r.db.Create(&user).Error
+	if err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}
+
+func (r *userRepository) Update(ctx context.Context, user models.User, id int) (models.User, error) {
+	err := r.db.Model(&models.User{}).Where("id = ?", id).Updates(user).Error
+	if err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}
+func (r *userRepository) UpdatePassword(ctx context.Context, id int, password string) (models.User, error) {
+	var user models.User
+	err := r.db.Model(&models.User{}).Where("id = ?", id).Update("password", password).First(&user).Error
 	if err != nil {
 		return models.User{}, err
 	}

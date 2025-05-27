@@ -19,6 +19,9 @@ type (
 	User interface {
 		Login(ctx context.Context, dto dto.Login) (responses.LoginResponse, error)
 		Register(ctx context.Context, dto dto.Register) (models.UserResponse, error)
+		Update(ctx context.Context, id int, dto dto.UpdateUser) (models.UserResponse, error)
+		UpdatePassword(ctx context.Context, id int, dto dto.UpdatePassword) (models.UserResponse, error)
+		Me(ctx context.Context, id int) (models.UserResponse, error)
 	}
 
 	userService struct {
@@ -88,6 +91,74 @@ func (s *userService) Register(ctx context.Context, dto dto.Register) (res model
 	}
 
 	user, err = s.userRepository.Create(ctx, newUser)
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	return models.NewToUserResponse(user), nil
+}
+
+func (s *userService) Update(ctx context.Context, id int, dto dto.UpdateUser) (res models.UserResponse, err error) {
+	user, err := s.userRepository.FindByID(ctx, id)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.UserResponse{}, commons.ErrNotfound
+	}
+
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	user.Name = dto.Name
+	user.Username = dto.Username
+
+	user, err = s.userRepository.Update(ctx, user, id)
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	return models.NewToUserResponse(user), nil
+}
+func (s *userService) UpdatePassword(ctx context.Context, id int, dto dto.UpdatePassword) (res models.UserResponse, err error) {
+	user, err := s.userRepository.FindByID(ctx, id)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.UserResponse{}, commons.ErrNotfound
+	}
+
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	isPasswordMatch, err := user.ComparePassword(dto.OldPassword)
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	if !isPasswordMatch {
+		return models.UserResponse{}, commons.ErrWrongPassword
+	}
+
+	err = user.EncryptPassword(10)
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	user, err = s.userRepository.UpdatePassword(ctx, id, user.Password)
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+
+	return models.NewToUserResponse(user), nil
+}
+
+func (s *userService) Me(ctx context.Context, id int) (res models.UserResponse, err error) {
+	user, err := s.userRepository.FindByID(ctx, id)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.UserResponse{}, commons.ErrNotfound
+	}
+
 	if err != nil {
 		return models.UserResponse{}, err
 	}

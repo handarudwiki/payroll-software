@@ -9,4 +9,5 @@ var (
 	ErrInvalidToken   = errors.New("invalid token")
 	ErrInternalServer = errors.New("internal server error")
 	ErrInvalidInput   = errors.New("invalid input")
+	ErrWrongPassword  = errors.New("wrong password")
 )

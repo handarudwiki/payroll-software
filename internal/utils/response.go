@@ -15,11 +15,12 @@ type ErrValidation struct {
 }
 
 var ErrToResponseCode = map[error]int{
-	commons.ErrCredentials:  http.StatusUnauthorized,
-	commons.ErrNotfound:     http.StatusNotFound,
-	commons.ErrInvalidInput: http.StatusBadRequest,
-	commons.ErrConflict:     http.StatusConflict,
-	commons.ErrInvalidToken: http.StatusUnauthorized,
+	commons.ErrCredentials:   http.StatusUnauthorized,
+	commons.ErrNotfound:      http.StatusNotFound,
+	commons.ErrInvalidInput:  http.StatusBadRequest,
+	commons.ErrConflict:      http.StatusConflict,
+	commons.ErrInvalidToken:  http.StatusUnauthorized,
+	commons.ErrWrongPassword: 401,
 }
 
 func ResponseSuccess(ctx *gin.Context, data interface{}) {
