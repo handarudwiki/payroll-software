@@ -16,6 +16,8 @@ type (
 		Create(ctx context.Context, salaryComponent models.SalaryComponent) (models.SalaryComponent, error)
 		Update(ctx context.Context, id int, salaryComponent models.SalaryComponent) (models.SalaryComponent, error)
 		Delete(ctx context.Context, id int) error
+		BulkCreate(ctx context.Context, salaryComponents []models.SalaryComponent) ([]models.SalaryComponent, error)
+		FindAllOnly(ctx context.Context) (salaryComponents []models.SalaryComponent, err error)
 	}
 	salaryComponent struct {
 		db *gorm.DB
@@ -74,4 +76,19 @@ func (r *salaryComponent) Delete(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (r *salaryComponent) BulkCreate(ctx context.Context, salaryComponents []models.SalaryComponent) ([]models.SalaryComponent, error) {
+	err := r.db.Create(&salaryComponents).Error
+	if err != nil {
+		return nil, err
+	}
+	return salaryComponents, nil
+}
+func (r *salaryComponent) FindAllOnly(ctx context.Context) (salaryComponents []models.SalaryComponent, err error) {
+	err = r.db.Find(&salaryComponents).Error
+	if err != nil {
+		return nil, err
+	}
+	return salaryComponents, nil
 }

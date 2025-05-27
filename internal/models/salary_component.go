@@ -9,8 +9,8 @@ import (
 type SalaryComponentType string
 
 const (
-	SalaryComponentTypeBasic    SalaryComponentType = "allowance"
-	SalaryComponentTypeOvertime SalaryComponentType = "deduction"
+	SalaryTypeAllowance SalaryComponentType = "allowance"
+	SalaryTypeDeduction SalaryComponentType = "deduction"
 )
 
 type SalaryComponent struct {
