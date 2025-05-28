@@ -35,7 +35,7 @@ func AuthMiddleware(cfg config.JWT) gin.HandlerFunc {
 			return
 		}
 
-		c.Set("id", claims.ID)
+		c.Set("id", claims.UserId)
 		c.Set("role", claims.Role)
 		c.Next()
 	}
