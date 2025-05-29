@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -90,6 +91,7 @@ func (c *userController) Update(ctx *gin.Context) {
 		return
 	}
 	id := ctx.GetInt("id")
+	fmt.Println("id from context", id)
 	userResponse, err := c.userService.Update(ctx, id, updateRequest)
 	if err != nil {
 		code := utils.GetHttpStatusCode(err)

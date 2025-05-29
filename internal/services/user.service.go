@@ -131,12 +131,11 @@ func (s *userService) UpdatePassword(ctx context.Context, id int, dto dto.Update
 	}
 
 	isPasswordMatch, err := user.ComparePassword(dto.OldPassword)
-	if err != nil {
-		return models.UserResponse{}, err
-	}
-
 	if !isPasswordMatch {
 		return models.UserResponse{}, commons.ErrWrongPassword
+	}
+	if err != nil {
+		return models.UserResponse{}, err
 	}
 
 	err = user.EncryptPassword(10)
