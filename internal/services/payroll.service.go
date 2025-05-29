@@ -167,10 +167,10 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 		if len(leaves) == 0 {
 			for _, comp := range employee.EmployeeComponent {
 				payslipDetail := models.PayslipDetail{
-					PayrollID:     payroll.ID,
-					ComponentID:   comp.SalaryComponentID,
-					Amount:        comp.Amount,
-					ComponentType: comp.SalaryComponent.Type,
+					PayrollID:         payroll.ID,
+					SalaryComponentID: comp.SalaryComponentID,
+					Amount:            comp.Amount,
+					ComponentType:     comp.SalaryComponent.Type,
 				}
 
 				payslipDetails = append(payslipDetails, payslipDetail)
