@@ -67,17 +67,8 @@ func (c *attendance) FindByID(ctx *gin.Context) {
 
 func (c *attendance) Create(ctx *gin.Context) {
 	var createRequest dto.CreateAttendance
-	if err := ctx.ShouldBindJSON(&createRequest); err != nil {
-		utils.ResponseError(ctx, "Invalid request", http.StatusBadRequest)
-		return
-	}
 
-	errors := utils.ValidateRequest(createRequest)
-
-	if len(errors) > 0 {
-		utils.ResponseValidationError(ctx, errors)
-		return
-	}
+	createRequest.EmployeeID = ctx.GetInt("id")
 
 	createResponse, err := c.service.Create(ctx, createRequest)
 	if err != nil {

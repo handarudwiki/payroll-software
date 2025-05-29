@@ -1,8 +1,7 @@
 package dto
 
 type CreateAttendance struct {
-	EmployeeID   int `json:"employee_id" validate:"required"`
-	WorkingHours int `json:"working_hours" validate:"required"`
+	EmployeeID int `json:"employee_id,omitempty"`
 }
 
 type UpdateAttendance struct {

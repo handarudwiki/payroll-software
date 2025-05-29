@@ -35,17 +35,21 @@ func NewAttendanceFromCreateAttendance(data dto.CreateAttendance) (Attendance, e
 
 	var status AttendaceStatus
 
+	var working_hours int
+
 	if date.Hour() > 8 {
 		status = Late
+		working_hours = 8 - (date.Hour() - 8)
 	} else {
 		status = Present
+		working_hours = 8
 	}
 
 	return Attendance{
 		EmployeeID:   data.EmployeeID,
 		Date:         date,
 		Status:       status,
-		WorkingHours: data.WorkingHours,
+		WorkingHours: working_hours,
 	}, nil
 }
 
