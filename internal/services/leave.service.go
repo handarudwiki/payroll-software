@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/handarudwiki/payroll-sistem/internal/dto"
 	"github.com/handarudwiki/payroll-sistem/internal/models"
@@ -60,7 +61,11 @@ func (s *leave) FindAll(ctx context.Context, base dto.BaseQuery) (res []response
 		return res, meta, err
 	}
 
+	fmt.Println("Total Data:", totalData)
+
 	meta = commons.NewPagination(base.Page, base.Limit, int(totalData))
+
+	fmt.Printf("page: %d, limit: %d, totalData: %d\n", base.Page, base.Limit, totalData)
 
 	res = responses.NewLeaveResponses(leaves)
 	return res, meta, nil

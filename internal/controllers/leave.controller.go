@@ -119,17 +119,11 @@ func (c *leave) Delete(ctx *gin.Context) {
 }
 func (c *leave) FindAll(ctx *gin.Context) {
 	var baseQuery dto.BaseQuery
-	if err := ctx.ShouldBindQuery(&baseQuery); err != nil {
-		utils.ResponseError(ctx, "Invalid request", http.StatusBadRequest)
-		return
-	}
 
-	errors := utils.ValidateRequest(baseQuery)
+	page, limit := utils.GetPaginationParams(ctx)
 
-	if len(errors) > 0 {
-		utils.ResponseValidationError(ctx, errors)
-		return
-	}
+	baseQuery.Page = page
+	baseQuery.Limit = limit
 
 	leaves, totalData, err := c.service.FindAll(ctx, baseQuery)
 	if err != nil {
