@@ -36,6 +36,8 @@ func (c *leave) Create(ctx *gin.Context) {
 		return
 	}
 
+	createRequest.EmployeeID = ctx.GetInt("id")
+
 	errors := utils.ValidateRequest(createRequest)
 
 	if len(errors) > 0 {
