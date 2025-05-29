@@ -59,6 +59,7 @@ func (s *loan) Create(ctx context.Context, dto dto.CreateLoan) (res responses.Lo
 	return res, nil
 }
 func (s *loan) FindAll(ctx context.Context, base dto.BaseQuery) (res []responses.Loan, meta commons.Pagination, err error) {
+
 	loans, totalData, err := s.repo.FindAll(ctx, base)
 	if err != nil {
 		return res, meta, err

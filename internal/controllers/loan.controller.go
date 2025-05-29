@@ -54,15 +54,13 @@ func (c *loan) Create(ctx *gin.Context) {
 	utils.ResponseSuccess(ctx, createResponse)
 }
 func (c *loan) FindAll(ctx *gin.Context) {
-	baseQuery := dto.BaseQuery{
-		Page:  1,
-		Limit: 10,
-	}
 
-	if err := ctx.ShouldBindQuery(&baseQuery); err != nil {
-		utils.ResponseError(ctx, "Invalid request", http.StatusBadRequest)
-		return
-	}
+	var baseQuery dto.BaseQuery
+
+	page, limit := utils.GetPaginationParams(ctx)
+
+	baseQuery.Page = page
+	baseQuery.Limit = limit
 
 	loans, meta, err := c.service.FindAll(ctx, baseQuery)
 	if err != nil {

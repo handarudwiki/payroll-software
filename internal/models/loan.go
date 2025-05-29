@@ -36,7 +36,7 @@ func NewLoanFromCreateLoan(data dto.CreateLoan) (Loan, error) {
 		EmployeeID:         data.EmployeeID,
 		TotalAmount:        data.TotalAmount,
 		MonthlyInstallment: data.MonthlyInstallment,
-		RemainingAmount:    data.RemainingAmount,
+		RemainingAmount:    data.TotalAmount,
 		StartDate:          startDate,
 		Status:             LoanStatus(data.Status),
 	}, nil
