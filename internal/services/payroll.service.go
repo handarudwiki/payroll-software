@@ -176,7 +176,7 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 				payslipDetails = append(payslipDetails, payslipDetail)
 			}
 
-			_, err = s.payslipRepo.BulkCreate(ctx, tx, payslipDetails)
+			err = s.payslipRepo.BulkCreate(ctx, tx, payslipDetails)
 			if err != nil {
 				return err
 			}

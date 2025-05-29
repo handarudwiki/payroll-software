@@ -3,10 +3,10 @@ package responses
 import "github.com/handarudwiki/payroll-sistem/internal/models"
 
 type PayrollDetail struct {
-	SalaryComponentID int                     `json:"component_id"`
+	SalaryComponentID int                     `json:"salary_component_id"`
 	ComponentType     string                  `json:"component_type"`
 	Amount            float64                 `json:"amount"`
-	Component         SalaryComponentResponse `json:"component"`
+	SalaryComponent   SalaryComponentResponse `json:"salary_component"`
 }
 
 type Payroll struct {
@@ -29,7 +29,7 @@ func NewPayrollDetails(details []models.PayslipDetail) []PayrollDetail {
 			SalaryComponentID: detail.SalaryComponentID,
 			ComponentType:     string(detail.ComponentType),
 			Amount:            detail.Amount,
-			Component:         NewSalaryComponentResponse(detail.Component),
+			SalaryComponent:   NewSalaryComponentResponse(detail.SalaryComponent),
 		})
 	}
 	return res
