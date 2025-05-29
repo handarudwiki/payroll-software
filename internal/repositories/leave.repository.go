@@ -85,7 +85,7 @@ func (r *leave) FindByEmployeeIDS(ctx context.Context, employeeIDS []int) ([]mod
 	var leaves []models.Leave
 	err := r.db.Where("employee_id IN ?", employeeIDS).
 		Where("status = ?", models.LeaveStatusApproved).
-		Where("end_date >= CURDATE()").
+		Where("end_date >= NOW()").
 		Find(&leaves).Error
 	if err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (r *leave) FindByEmployeeIDMaternity(ctx context.Context, employeeID int) (
 	err := r.db.Where("employee_id = ?", employeeID).
 		Where("status = ?", models.LeaveStatusApproved).
 		Where("type = ?", models.LeaveTypeMaternity).
-		Where("end_date >= CURDATE()").
+		Where("end_date >= NOW()").
 		Find(&leaves).Error
 	if err != nil {
 		return nil, err

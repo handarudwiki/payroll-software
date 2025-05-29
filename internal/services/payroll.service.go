@@ -152,8 +152,9 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 			Period:          periodDate,
 			NetSalary:       totalSalary,
 			TotalAllowances: totalAllowance,
+			BaseSalary:      baseSalary,
 			TotalDeductions: totalDeduction,
-			Generated:       time.Now(),
+			GeneratedAt:     time.Now(),
 		}
 
 		payroll, err = s.repo.Create(ctx, tx, payroll)

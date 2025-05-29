@@ -16,6 +16,7 @@ type Payroll struct {
 	Period          string          `json:"period"`
 	TotalAllowances float64         `json:"total_allowance"`
 	TotalDeductions float64         `json:"total_deduction"`
+	BaseSalary      float64         `json:"base_salary"`
 	NetSalary       float64         `json:"net_salary"`
 	GenerateAt      string          `json:"generated_at"`
 	PayrollDetail   []PayrollDetail `json:"payslip_details"`
@@ -41,9 +42,10 @@ func NewPayroll(payroll models.Payroll) Payroll {
 		Employee:        NewEmployeeResponse(payroll.Employee),
 		Period:          payroll.Period.Format("2006-01"),
 		TotalAllowances: payroll.TotalAllowances,
+		BaseSalary:      payroll.BaseSalary,
 		TotalDeductions: payroll.TotalDeductions,
 		NetSalary:       payroll.NetSalary,
-		GenerateAt:      payroll.Generated.Format("2006-01-02 15:04:05"),
+		GenerateAt:      payroll.GeneratedAt.Format("2006-01-02 15:04:05"),
 		PayrollDetail:   NewPayrollDetails(payroll.PayslipDetail),
 	}
 }

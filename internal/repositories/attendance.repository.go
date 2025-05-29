@@ -82,7 +82,7 @@ func (r *attendance) Delete(ctx context.Context, id int) error {
 
 func (r *attendance) TodayAttendance(ctx context.Context) ([]models.Attendance, error) {
 	var attendances []models.Attendance
-	err := r.db.Where("date = CURDATE()").Find(&attendances).Error
+	err := r.db.Where("date = NOW()").Find(&attendances).Error
 	if err != nil {
 		return nil, err
 	}

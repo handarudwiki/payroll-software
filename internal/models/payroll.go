@@ -10,8 +10,9 @@ type Payroll struct {
 	TotalAllowances float64         `json:"total_allowance"`
 	TotalDeductions float64         `json:"total_deduction"`
 	NetSalary       float64         `json:"net_salary"`
+	BaseSalary      float64         `json:"base_salary" gorm:"not null"`
 	PayslipDetail   []PayslipDetail `json:"payslip_details" gorm:"foreignKey:PayrollID;references:ID"`
-	Generated       time.Time       `json:"generated" gorm:"default:false"`
+	GeneratedAt     time.Time       `json:"generate_at" gorm:"default:false"`
 	CreatedAt       time.Time       `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt       time.Time       `json:"updated_at" gorm:"autoUpdateTime"`
 }
