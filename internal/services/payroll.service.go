@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bytes"
 	"context"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/handarudwiki/payroll-sistem/internal/models/commons"
 	"github.com/handarudwiki/payroll-sistem/internal/repositories"
 	"github.com/handarudwiki/payroll-sistem/internal/responses"
+	"github.com/xuri/excelize/v2"
 	"gorm.io/gorm"
 )
 
@@ -17,6 +19,7 @@ type (
 		Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 		FindByID(ctx context.Context, id int) (res responses.Payroll, err error)
 		FindAll(ctx context.Context, base dto.BaseQuery) (res []responses.Payroll, meta commons.Pagination, err error)
+		GenerateExcel(ctx context.Context, base dto.BaseQuery) (byte []byte, err error)
 	}
 
 	payroll struct {
@@ -83,10 +86,11 @@ func (s *payroll) Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 	}
 
 	for _, employee := range employees {
+		totalDeduction := float64(0)
+
 		baseSalary := employee.Position.BaseSalary
 
 		totalAllowance := float64(0)
-		totalDeduction := float64(0)
 
 		//handle component salary
 		for _, comp := range employee.EmployeeComponent {
@@ -214,4 +218,47 @@ func (s *payroll) FindAll(ctx context.Context, base dto.BaseQuery) (res []respon
 	res = responses.NewPayrolls(payrolls)
 
 	return res, meta, nil
+}
+
+func (s *payroll) GenerateExcel(ctx context.Context, base dto.BaseQuery) (fileBytes []byte, err error) {
+	f := excelize.NewFile()
+	sheet := f.GetSheetName(f.GetActiveSheetIndex())
+
+	payrolls, _, err := s.repo.FindAll(ctx, base)
+	if err != nil {
+		return nil, err
+	}
+
+	// 1. Write header row
+	headers := []string{"ID", "Employee Name", "Nik", "Period", "Total Allowance", "Total Deduction", "Base Salary"} // Adjust as needed
+	for colIdx, header := range headers {
+		cell, _ := excelize.CoordinatesToCellName(colIdx+1, 1)
+		f.SetCellValue(sheet, cell, header)
+	}
+
+	// 2. Write data rows
+	for rowIdx, payroll := range payrolls {
+		// Replace these with actual fields from your `payroll` model
+		rowData := []interface{}{
+			payroll.ID,
+			payroll.Employee.Name,
+			payroll.Employee.NIK,
+			payroll.Period,
+			payroll.TotalAllowances,
+			payroll.TotalDeductions,
+			payroll.BaseSalary,
+		}
+		for colIdx, val := range rowData {
+			cell, _ := excelize.CoordinatesToCellName(colIdx+1, rowIdx+2)
+			f.SetCellValue(sheet, cell, val)
+		}
+	}
+
+	// 3. Return the file as []byte
+	var buf bytes.Buffer
+	if err := f.Write(&buf); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }

@@ -109,7 +109,7 @@ func (r *employee) FindAll(ctx context.Context, base dto.BaseQuery) (employees [
 }
 
 func (r *employee) FindAllActive(ctx context.Context) (employees []models.Employee, err error) {
-	err = r.db.Select("id", "name", "nik").
+	err = r.db.
 		Where("status", "active").
 		Preload("Department").Preload("Position").
 		Preload("Leaves").
@@ -124,7 +124,7 @@ func (r *employee) FindAllActive(ctx context.Context) (employees []models.Employ
 
 func (r *employee) FindByIDSActive(ctx context.Context, ids []int) ([]models.Employee, error) {
 	var employees []models.Employee
-	err := r.db.Select("id", "name", "nik").
+	err := r.db.
 		Where("status = ? AND id IN ?", "active", ids).
 		Preload("Department").Preload("Position").
 		Preload("EmployeeComponent.SalaryComponent").

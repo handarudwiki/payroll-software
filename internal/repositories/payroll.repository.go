@@ -52,6 +52,8 @@ func (r *payroll) FindAll(ctx context.Context, base dto.BaseQuery) (payrolls []m
 	err = r.db.Model(&models.Payroll{}).Scopes(
 		utils.Paginate(base.Page, base.Limit),
 		utils.Search(base.Search),
+		utils.FilterEmployeeID(base.EmployeeID),
+		utils.FilterPeriodMonth(base.Period),
 	).Preload("Employee.Department").Preload("Employee.Position").
 		Find(&payrolls).Error
 	if err != nil {

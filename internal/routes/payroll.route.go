@@ -26,5 +26,6 @@ func InitPayroll(db *gorm.DB, jwt config.JWT, router *gin.Engine) {
 		payroll.POST("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), payrollController.Create)
 		payroll.GET("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), payrollController.FindByID)
 		payroll.GET("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), payrollController.FindAll)
+		payroll.GET("/excel", payrollController.GenerateExcel)
 	}
 }

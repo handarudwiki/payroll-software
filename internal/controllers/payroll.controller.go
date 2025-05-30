@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -15,6 +16,7 @@ type (
 		Create(ctx *gin.Context)
 		FindByID(ctx *gin.Context)
 		FindAll(ctx *gin.Context)
+		GenerateExcel(ctx *gin.Context)
 	}
 	payroll struct {
 		service services.Payroll
@@ -37,7 +39,9 @@ func (c *payroll) Create(ctx *gin.Context) {
 		utils.ResponseValidationError(ctx, errors)
 		return
 	}
+
 	err := c.service.Create(ctx, createRequest)
+	fmt.Println("Create Request:", createRequest)
 
 	if err != nil {
 		code := utils.GetHttpStatusCode(err)
@@ -82,4 +86,36 @@ func (c *payroll) FindAll(ctx *gin.Context) {
 	}
 
 	utils.ResponsePagination(ctx, res, meta)
+}
+
+func (c *payroll) GenerateExcel(ctx *gin.Context) {
+	var baseQuery dto.BaseQuery
+
+	page, limit := utils.GetPaginationParams(ctx)
+
+	baseQuery.Page = page
+	baseQuery.Limit = limit
+
+	employeeId := ctx.Query("employee_id")
+
+	if employeeId != "" {
+		intEmployeeID, err := strconv.Atoi(employeeId)
+		if err != nil {
+			utils.ResponseError(ctx, "Invalid employee ID", http.StatusBadRequest)
+			return
+		}
+		baseQuery.EmployeeID = &intEmployeeID
+	}
+
+	fileBytes, err := c.service.GenerateExcel(ctx, baseQuery)
+
+	if err != nil {
+		statusCode := utils.GetHttpStatusCode(err)
+		utils.ResponseError(ctx, err.Error(), statusCode)
+		return
+	}
+
+	ctx.Header("Content-Description", "File Transfer")
+	ctx.Header("Content-Disposition", "attachment; filename=report.xlsx")
+	ctx.Data(http.StatusOK, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileBytes)
 }
