@@ -9,17 +9,16 @@ import (
 )
 
 func TestMain(m *testing.M) {
+
 	db, _ := utils_test.SetupTestSuite()
 
 	exitCode := m.Run()
 
-	utils_test.TearDownSuite()
-
 	err := utils_test.CleanAllTables(db)
-
 	if err != nil {
 		log.Fatal("Failed to clean up test database: ", err)
 	}
+	utils_test.TearDownSuite()
 
 	os.Exit(exitCode)
 

@@ -1,7 +1,8 @@
-package modules
+package e2e
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	utils_test "github.com/handarudwiki/payroll-sistem/tests/utils"
@@ -13,8 +14,10 @@ type LoginResponse struct {
 	} `json:"data"`
 }
 
-func TestAuth_Login_Success(t *testing.T) {
+func TestSuccessLogin(t *testing.T) {
 	app := utils_test.NewTestApp(t)
+
+	fmt.Println("Running TestAuth_Login_Success")
 
 	nameTest := "testuser"
 	usernameTest := "testuser"

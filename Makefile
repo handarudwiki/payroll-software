@@ -14,9 +14,8 @@ MIGRATIONS_DIR = database/migrations
 up:
 	goose -dir $(MIGRATIONS_DIR) postgres $(DATABASE_URL) up
 
-up_test : ENV_FILE = .env.test
-up_test : 
-	goose -dir ${MIGRATIONS_DIR} postgres ${DATABASE_URL} up
+up_test:
+	goose -dir $(MIGRATIONS_DIR) postgres $(DATABASE_URL_TEST) up
 
 down:
 	goose -dir $(MIGRATIONS_DIR) postgres $(DATABASE_URL) down
