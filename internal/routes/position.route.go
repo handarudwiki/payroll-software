@@ -18,11 +18,11 @@ func InitPosition(db *gorm.DB, jwt config.JWT, app *gin.Engine) {
 	// Position routes
 	position := app.Group("/position")
 	{
-		position.GET("/", positionController.FindAll)
-		position.GET("/:id", positionController.FindByID)
+		position.GET("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), positionController.FindAll)
+		position.GET("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), positionController.FindByID)
 		position.POST("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), positionController.Create)
 		position.PUT("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), positionController.Update)
-		position.DELETE("/:id", middlewares.AuthMiddleware(jwt), positionController.Delete)
+		position.DELETE("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), positionController.Delete)
 	}
 
 }
