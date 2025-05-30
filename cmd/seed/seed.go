@@ -5,8 +5,8 @@ import (
 
 	"github.com/handarudwiki/payroll-sistem/config"
 	"github.com/handarudwiki/payroll-sistem/database/connections"
+	"github.com/handarudwiki/payroll-sistem/database/seeds"
 	"github.com/handarudwiki/payroll-sistem/internal/repositories"
-	"github.com/handarudwiki/payroll-sistem/internal/seeds"
 )
 
 func main() {
