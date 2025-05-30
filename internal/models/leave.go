@@ -22,7 +22,7 @@ const (
 type Leave struct {
 	ID         int         `json:"id"`
 	EmployeeID int         `json:"employee_id"`
-	Employee   Employee    `json:"employee"`
+	Employee   *Employee   `json:"employee"`
 	StartDate  time.Time   `json:"start_date"`
 	EndDate    time.Time   `json:"end_date"`
 	Status     LeaveStatus `json:"status"`

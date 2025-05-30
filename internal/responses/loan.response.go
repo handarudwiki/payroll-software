@@ -14,10 +14,16 @@ type Loan struct {
 	RemainingAmount    float64   `json:"remaining_amount"`
 	StartDate          time.Time `json:"start_date"`
 	Status             string    `json:"status"`
-	Employee           Employee  `json:"employee"`
+	Employee           *Employee `json:"employee"`
 }
 
 func NewLoanResponse(loan models.Loan) Loan {
+
+	var employee Employee
+	if loan.Employee != nil {
+		employee = NewEmployeeResponse(*loan.Employee)
+	}
+
 	return Loan{
 		ID:                 loan.ID,
 		EmployeeID:         loan.EmployeeID,
@@ -26,7 +32,7 @@ func NewLoanResponse(loan models.Loan) Loan {
 		RemainingAmount:    loan.RemainingAmount,
 		StartDate:          loan.StartDate,
 		Status:             string(loan.Status),
-		Employee:           NewEmployeeResponse(loan.Employee),
+		Employee:           &employee,
 	}
 }
 

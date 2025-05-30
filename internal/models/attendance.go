@@ -21,7 +21,7 @@ const (
 type Attendance struct {
 	ID           int             `json:"id"`
 	EmployeeID   int             `json:"employee_id"`
-	Employee     Employee        `json:"employee"`
+	Employee     *Employee       `json:"employee"`
 	Date         time.Time       `json:"date"`
 	Status       AttendaceStatus `json:"status"`
 	WorkingHours int             `json:"working_hours"`

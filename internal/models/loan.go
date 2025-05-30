@@ -22,7 +22,7 @@ type Loan struct {
 	RemainingAmount    float64    `json:"remaining_amount"`
 	StartDate          time.Time  `json:"start_date"`
 	Status             LoanStatus `json:"status"`
-	Employee           Employee   `json:"employee"`
+	Employee           *Employee  `json:"employee"`
 	CreatedAt          time.Time  `json:"created_at"`
 	UpdatedAt          time.Time  `json:"updated_at"`
 }

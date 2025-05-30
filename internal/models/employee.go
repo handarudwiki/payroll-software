@@ -29,8 +29,8 @@ type Employee struct {
 	Attendances       []Attendance        `json:"attendances,omitempty"`
 	EmployeeComponent []EmployeeComponent `json:"employee_components,omitempty"`
 	Leaves            []Leave             `json:"leaves,omitempty"`
-	Department        Department          `json:"department"`
-	Position          Position            `json:"position"`
+	Department        *Department         `json:"department"`
+	Position          *Position           `json:"position"`
 	CreatedAt         time.Time           `json:"created_at"`
 	UpdatedAt         time.Time           `json:"updated_at"`
 }

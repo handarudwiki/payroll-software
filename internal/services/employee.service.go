@@ -76,7 +76,7 @@ func (s *employee) Create(ctx context.Context, dto dto.CreateEmployee) (res resp
 	if err != nil {
 		return res, err
 	}
-	employee.Department = department
+	employee.Department = &department
 
 	position, err := s.positionRepo.FindByID(ctx, dto.PositionID)
 
@@ -87,7 +87,7 @@ func (s *employee) Create(ctx context.Context, dto dto.CreateEmployee) (res resp
 	if err != nil {
 		return res, err
 	}
-	employee.Position = position
+	employee.Position = &position
 
 	nik, err := s.repo.FindByNIK(ctx, dto.NIK)
 

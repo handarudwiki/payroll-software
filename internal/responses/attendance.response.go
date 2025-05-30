@@ -9,17 +9,23 @@ import (
 type Attendance struct {
 	ID           int       `json:"id"`
 	EmployeeID   int       `json:"employee_id"`
-	Employee     Employee  `json:"employee"`
+	Employee     *Employee `json:"employee"`
 	Date         time.Time `json:"date"`
 	Status       string    `json:"status"`
 	WorkingHours int       `json:"working_hours"`
 }
 
 func NewAttendanceResponse(attendance models.Attendance) Attendance {
+
+	var employee Employee
+	if attendance.Employee != nil {
+		employee = NewEmployeeResponse(*attendance.Employee)
+	}
+
 	return Attendance{
 		ID:           attendance.ID,
 		EmployeeID:   attendance.EmployeeID,
-		Employee:     NewEmployeeResponse(attendance.Employee),
+		Employee:     &employee,
 		Date:         attendance.Date,
 		Status:       string(attendance.Status),
 		WorkingHours: attendance.WorkingHours,
