@@ -84,7 +84,7 @@ func (s *userService) Register(ctx context.Context, dto dto.Register) (res model
 		Password: dto.Password,
 		Role:     models.RoleUser,
 	}
-	err = newUser.EncryptPassword(10)
+	err = newUser.EncryptPassword()
 
 	if err != nil {
 		return models.UserResponse{}, err
@@ -138,7 +138,7 @@ func (s *userService) UpdatePassword(ctx context.Context, id int, dto dto.Update
 		return models.UserResponse{}, err
 	}
 
-	err = user.EncryptPassword(10)
+	err = user.EncryptPassword()
 	if err != nil {
 		return models.UserResponse{}, err
 	}

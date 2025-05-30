@@ -39,8 +39,8 @@ func NewToUserResponse(user User) UserResponse {
 	}
 }
 
-func (u *User) EncryptPassword(salt int) (err error) {
-	encrypTedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), salt)
+func (u *User) EncryptPassword() (err error) {
+	encrypTedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
 	if err != nil {
 		return err
 	}

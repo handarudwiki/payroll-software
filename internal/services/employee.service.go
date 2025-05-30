@@ -123,7 +123,7 @@ func (s *employee) Create(ctx context.Context, dto dto.CreateEmployee) (res resp
 		Role:     models.RoleUser,
 	}
 
-	user.EncryptPassword(10)
+	user.EncryptPassword()
 
 	user, err = s.userRepo.Create(ctx, user)
 	if err != nil {
