@@ -19,8 +19,8 @@ func InitSalaryComponent(db *gorm.DB, jwt config.JWT, router *gin.Engine) {
 	salaryComponent := router.Group("/salary-component")
 	{
 		salaryComponent.POST("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), salaryComponentController.Create)
-		salaryComponent.GET("/", salaryComponentController.FindAll)
-		salaryComponent.GET("/:id", salaryComponentController.FindByID)
+		salaryComponent.GET("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), salaryComponentController.FindAll)
+		salaryComponent.GET("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), salaryComponentController.FindByID)
 		salaryComponent.PUT("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), salaryComponentController.Update)
 		salaryComponent.DELETE("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), salaryComponentController.Delete)
 	}
