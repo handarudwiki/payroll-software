@@ -18,8 +18,8 @@ func InitDepartment(db *gorm.DB, jwt config.JWT, router *gin.Engine) {
 	// Department routes
 	department := router.Group("/department")
 	{
-		department.GET("/", departmentController.FindAll)
-		department.GET("/:id", departmentController.FindByID)
+		department.GET("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), departmentController.FindAll)
+		department.GET("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), departmentController.FindByID)
 		department.POST("/", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), departmentController.Create)
 		department.PUT("/:id", middlewares.AuthMiddleware(jwt), middlewares.AuthorizationMiddleware("admin"), departmentController.Update)
 		department.DELETE("/:id", middlewares.AuthMiddleware(jwt), departmentController.Delete)
