@@ -6,6 +6,7 @@ import (
 
 	"github.com/handarudwiki/payroll-sistem/internal/dto"
 	"github.com/handarudwiki/payroll-sistem/internal/models"
+	"github.com/handarudwiki/payroll-sistem/internal/models/commons"
 	"github.com/handarudwiki/payroll-sistem/internal/repositories"
 	"github.com/handarudwiki/payroll-sistem/internal/responses"
 	"gorm.io/gorm"
@@ -15,6 +16,7 @@ type (
 	Payroll interface {
 		Create(ctx context.Context, dto dto.CreatePayroll) (err error)
 		FindByID(ctx context.Context, id int) (res responses.Payroll, err error)
+		FindAll(ctx context.Context, base dto.BaseQuery) (res []responses.Payroll, meta commons.Pagination, err error)
 	}
 
 	payroll struct {
@@ -195,4 +197,21 @@ func (s *payroll) FindByID(ctx context.Context, id int) (res responses.Payroll, 
 	res = responses.NewPayroll(payroll)
 
 	return
+}
+
+func (s *payroll) FindAll(ctx context.Context, base dto.BaseQuery) (res []responses.Payroll, meta commons.Pagination, err error) {
+	payrolls, totalData, err := s.repo.FindAll(ctx, base)
+	if err != nil {
+		return res, meta, err
+	}
+
+	for _, payroll := range payrolls {
+		res = append(res, responses.NewPayroll(payroll))
+	}
+
+	meta = commons.NewPagination(base.Page, base.Limit, int(totalData))
+
+	res = responses.NewPayrolls(payrolls)
+
+	return res, meta, nil
 }

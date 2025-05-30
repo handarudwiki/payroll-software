@@ -14,6 +14,7 @@ type (
 	Payroll interface {
 		Create(ctx *gin.Context)
 		FindByID(ctx *gin.Context)
+		FindAll(ctx *gin.Context)
 	}
 	payroll struct {
 		service services.Payroll
@@ -61,4 +62,24 @@ func (c *payroll) FindByID(ctx *gin.Context) {
 	}
 
 	utils.ResponseSuccess(ctx, payroll)
+}
+
+func (c *payroll) FindAll(ctx *gin.Context) {
+	var baseQuery dto.BaseQuery
+
+	page, limit := utils.GetPaginationParams(ctx)
+
+	baseQuery.Page = page
+	baseQuery.Limit = limit
+
+	res, meta, err := c.service.FindAll(ctx, baseQuery)
+
+	if err != nil {
+		statusCode := utils.GetHttpStatusCode(err)
+
+		utils.ResponseError(ctx, err.Error(), statusCode)
+		return
+	}
+
+	utils.ResponsePagination(ctx, res, meta)
 }
