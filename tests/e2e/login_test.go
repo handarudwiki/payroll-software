@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/handarudwiki/payroll-sistem/internal/models"
 	utils_test "github.com/handarudwiki/payroll-sistem/tests/utils"
 )
 
@@ -27,7 +28,7 @@ func TestSuccessLogin(t *testing.T) {
 	usernameTest := "testuser"
 	passwordTest := "testpassword"
 
-	utils_test.CreateUserTest(app.DB, nameTest, usernameTest, passwordTest)
+	utils_test.CreateUserTest(app.DB, nameTest, usernameTest, passwordTest, models.RoleUser)
 
 	loginRequest := map[string]string{
 		"username": usernameTest,
@@ -56,13 +57,13 @@ func TestSuccessLogin(t *testing.T) {
 func TestFailedLoginWrongUsernameOrpassword(t *testing.T) {
 	app := utils_test.NewTestApp(t)
 
-	fmt.Println("Running TestAuth_Login_Success")
+	fmt.Println("Running failed login wrong username or password")
 
 	nameTest := "testuser"
 	usernameTest := "testuser2"
 	passwordTest := "testpassword"
 
-	utils_test.CreateUserTest(app.DB, nameTest, usernameTest, passwordTest)
+	utils_test.CreateUserTest(app.DB, nameTest, usernameTest, passwordTest, models.RoleUser)
 
 	loginRequest := map[string]string{
 		"username": usernameTest + "wrong",
@@ -91,11 +92,13 @@ func TestFailedLoginWrongUsernameOrpassword(t *testing.T) {
 func TestFailedBadRequest(t *testing.T) {
 	app := utils_test.NewTestApp(t)
 
+	fmt.Println("Running failed login bad request")
+
 	nameTest := "testuser"
 	usernameTest := "testuser3"
 	passwordTest := "testpassword"
 
-	utils_test.CreateUserTest(app.DB, nameTest, usernameTest, passwordTest)
+	utils_test.CreateUserTest(app.DB, nameTest, usernameTest, passwordTest, models.RoleUser)
 
 	loginRequest := map[string]string{
 		"username": "",

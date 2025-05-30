@@ -5,13 +5,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateUserTest(db *gorm.DB, name, username, password string) (models.User, error) {
+func CreateUserTest(db *gorm.DB, name, username, password string, role models.UserRole) (models.User, error) {
 
 	user := models.User{
 		Name:     name,
 		Username: username,
 		Password: password,
-		Role:     models.RoleUser,
+		Role:     role,
 	}
 
 	user.EncryptPassword()
