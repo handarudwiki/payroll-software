@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/handarudwiki/payroll-sistem/config"
 	"github.com/handarudwiki/payroll-sistem/database/connections"
+	"github.com/handarudwiki/payroll-sistem/internal/routes"
 	"gorm.io/gorm"
 )
 
@@ -50,12 +51,21 @@ func NewTestApp(t *testing.T) *TestApp {
 
 	gin.SetMode(gin.TestMode)
 
-	router := gin.Default()
-	router.SetTrustedProxies(nil) // Disable trusted proxies for testing
+	app := gin.New()
+	routes.InitUser(db, cfg.JWT, app)
+	routes.InitDepartment(db, cfg.JWT, app)
+	routes.InitPosition(db, cfg.JWT, app)
+	routes.InitEmployee(db, cfg.JWT, app)
+	routes.InitSalaryComponent(db, cfg.JWT, app)
+	routes.InitEmployeeComponent(db, cfg.JWT, app)
+	routes.InitAttendance(db, cfg.JWT, app)
+	routes.InitLeave(db, cfg.JWT, app)
+	routes.InitLoan(db, cfg.JWT, app)
+	routes.InitPayroll(db, cfg.JWT, app) // Disable trusted proxies for testing
 
 	return &TestApp{
 		DB:     db,
-		Router: router,
+		Router: app,
 		Config: cfg,
 	}
 }

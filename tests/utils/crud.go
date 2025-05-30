@@ -11,6 +11,7 @@ func CreateUserTest(db *gorm.DB, name, username, password string) (models.User, 
 		Name:     name,
 		Username: username,
 		Password: password,
+		Role:     models.RoleUser,
 	}
 
 	user.EncryptPassword()

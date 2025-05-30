@@ -3,6 +3,7 @@ package utils_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -20,6 +21,8 @@ func MakeRequest(T *testing.T, app *TestApp, metod, url string, body interface{}
 
 		reqBody = bytes.NewBuffer(jsonData)
 	}
+
+	fmt.Println("Making request to URL:", url)
 
 	req, err := http.NewRequest(metod, url, reqBody)
 

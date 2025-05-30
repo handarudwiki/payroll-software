@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/handarudwiki/payroll-sistem/config"
 	"github.com/handarudwiki/payroll-sistem/internal/dto"
@@ -55,9 +54,6 @@ func (s *userService) Login(ctx context.Context, dto dto.Login) (res responses.L
 	if !isPasswordMatch {
 		return responses.LoginResponse{}, commons.ErrCredentials
 	}
-
-	fmt.Println("role generate token ", user.Role)
-
 	token, err := utils.GenerateToken(user.ID, user.Role, s.jwt.Secret)
 	if err != nil {
 		return responses.LoginResponse{}, err
