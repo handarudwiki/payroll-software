@@ -96,7 +96,7 @@ func (r *employee) Delete(ctx context.Context, id int) error {
 }
 func (r *employee) FindAll(ctx context.Context, base dto.BaseQuery) (employees []models.Employee, totalData int64, err error) {
 	err = r.db.Scopes(utils.Paginate(base.Page, base.Limit),
-		utils.Search(base.Search)).Preload("Department").
+		utils.Search(base.Search), utils.FilterDepartment(base.DepartmentID), utils.FilterPosition(base.PositionID)).Preload("Department").
 		Preload("Position").Find(&employees).Error
 	if err != nil {
 		return employees, 0, err

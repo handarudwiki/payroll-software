@@ -38,6 +38,28 @@ func (c *employee) FindAll(ctx *gin.Context) {
 	base.Limit = limit
 	base.Search = ctx.Query("search")
 
+	departmentId := ctx.Query("department_id")
+	positionId := ctx.Query("position_id")
+
+	if departmentId != "" {
+		intDepartmentID, err := strconv.Atoi(departmentId)
+		if err != nil {
+			utils.ResponseError(ctx, "Invalid department ID", http.StatusBadRequest)
+			return
+		}
+		base.DepartmentID = &intDepartmentID
+	}
+
+	if positionId != "" {
+		intPositionId, err := strconv.Atoi(positionId)
+		if err != nil {
+			utils.ResponseError(ctx, "Invalid position ID", http.StatusBadRequest)
+			return
+		}
+
+		base.PositionID = &intPositionId
+	}
+
 	employees, meta, err := c.service.FindAll(ctx, base)
 	if err != nil {
 		code := utils.GetHttpStatusCode(err)
